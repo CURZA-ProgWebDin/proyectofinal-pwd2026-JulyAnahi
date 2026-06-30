@@ -1,7 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
+﻿import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
-// Importaciones de las Vistas Reales del Sistema
 import LoginView from '@/views/LoginView.vue'
 import ProductosView from '@/views/ProductosView.vue'
 import MovimientosView from '@/views/MovimientosView.vue'
@@ -26,17 +25,20 @@ const router = createRouter({
   routes
 })
 
-// Navigation Guards para restringir accesos según Token y Rol
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from) => {
   const authStore = useAuthStore()
 
+  if (!authStore.estaAutenticado && localStorage.getItem('token')) {
+    await authStore.obtenerPerfil()
+  }
+
   if (!to.meta.publica && !authStore.estaAutenticado) {
-    return next('/login')
+    return '/login'
   }
+
   if (to.meta.requiereAdmin && !authStore.esAdmin) {
-    return next('/denegado')
+    return '/denegado'
   }
-  next()
 })
 
 export default router

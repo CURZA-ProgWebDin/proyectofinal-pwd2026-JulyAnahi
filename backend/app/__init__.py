@@ -32,10 +32,9 @@ def create_app(config_class=Config):
     from app.routes.producto_routes import producto_bp
     from app.routes.movimiento_routes import movimiento_bp
 
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(categoria_bp)
-    app.register_blueprint(proveedor_bp)
-    app.register_blueprint(producto_bp)
-    app.register_blueprint(movimiento_bp)
-
+    app.register_blueprint(auth_bp, url_prefix='/api')
+    app.register_blueprint(categoria_bp, url_prefix='/api/categorias')
+    app.register_blueprint(proveedor_bp, url_prefix='/api/proveedores')
+    app.register_blueprint(producto_bp, url_prefix='/api/productos')
+    app.register_blueprint(movimiento_bp, url_prefix='/api/movimientos')
     return app

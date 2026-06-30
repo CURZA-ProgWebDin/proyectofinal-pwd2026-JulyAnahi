@@ -1,11 +1,10 @@
-<template>
+﻿<template>
   <div>
     <div class="header-section">
       <h2>Gestión de Usuarios del Sistema</h2>
       <button @click="abrirAlta" class="btn-primario">+ Agregar Nuevo Usuario</button>
     </div>
 
-    <!-- Tabla Reactiva con Botones de Operación -->
     <table>
       <thead>
         <tr>
@@ -21,7 +20,7 @@
           <td>{{ user.id }}</td>
           <td>{{ user.username }}</td>
           <td>{{ user.email }}</td>
-          <td><span class="role-badge">{{ user.role }}</span></td>
+          <td><span class="role-badge">{{ user.rol }}</span></td>
           <td>
             <button @click="abrirEdicion(user)" class="btn-edit">Editar</button>
             <button @click="eliminar(user.id)" class="btn-danger">Eliminar</button>
@@ -30,7 +29,6 @@
       </tbody>
     </table>
 
-    <!-- Modal con Formulario para Altas y Modificaciones -->
     <BaseModal :mostrar="modalAbierto" @cerrar="modalAbierto = false">
       <template #titulo>
         <h3>{{ editando ? 'Modificar Parámetros de Usuario' : 'Registrar Nuevo Usuario' }}</h3>
@@ -47,9 +45,9 @@
         <input v-if="!editando" v-model="form.password" type="password" required />
 
         <label>Rol Asignado</label>
-        <select v-model="form.role_id" required>
-          <option :value="1">Administrador (admin)</option>
-          <option :value="2">Operador de Stock (operador)</option>
+        <select v-model="form.rol" required>
+          <option value="admin">Administrador (admin)</option>
+          <option value="operador">Operador de Stock (operador)</option>
         </select>
 
         <button type="submit" class="btn-primario btn-block">
@@ -70,7 +68,7 @@ const modalAbierto = ref(false)
 const editando = ref(false)
 const usuarioIdSeleccionado = ref(null)
 
-const form = ref({ username: '', email: '', password: '', role_id: 2 })
+const form = ref({ username: '', email: '', password: '', rol: 'operador' })
 
 async function cargarUsuarios() {
   const res = await usuariosService.listar()
@@ -79,14 +77,14 @@ async function cargarUsuarios() {
 
 function abrirAlta() {
   editando.value = false
-  form.value = { username: '', email: '', password: '', role_id: 2 }
+  form.value = { username: '', email: '', password: '', rol: 'operador' }
   modalAbierto.value = true
 }
 
 function abrirEdicion(user) {
   editando.value = true
   usuarioIdSeleccionado.value = user.id
-  form.value = { username: user.username, email: user.email, role_id: user.role === 'admin' ? 1 : 2 }
+  form.value = { username: user.username, email: user.email, rol: user.rol }
   modalAbierto.value = true
 }
 
