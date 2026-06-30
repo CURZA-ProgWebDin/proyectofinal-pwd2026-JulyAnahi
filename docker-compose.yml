@@ -1,0 +1,70 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: stock_db
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - red-interna
+
+  backend:
+    build: ./backend
+    container_name: stock_backend
+    restart: always
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
+      JWT_SECRET_KEY: "${JWT_SECRET_KEY}"
+      JWT_ACCESS_TOKEN_EXPIRES: "${JWT_ACCESS_TOKEN_EXPIRES}"
+    depends_on:
+      - db
+    networks:
+      - red-interna
+
+  frontend:
+    build: ./frontend
+    container_name: stock_frontend
+    command: npm run dev -- --host
+    expose:
+      - "5173"
+    networks:
+      - red-interna
+
+  proxy:
+    image: nginx:1.25-alpine
+    container_name: stock_proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./proxy/certs:/etc/nginx/certs:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - red-interna
+    command: >
+      sh -c "echo '' &&
+             echo '===================================================' &&
+             echo '   SISTEMA DE GESTIÓN DE STOCK INICIADO CON ÉXITO' &&
+             echo '   INGRESA AQUÍ: https://localhost' &&
+             echo '===================================================' &&
+             echo '' &&
+             nginx -g 'daemon off;'"
+
+volumes:
+  postgres_data:
+
+networks:
+  red-interna:
+    driver: bridge

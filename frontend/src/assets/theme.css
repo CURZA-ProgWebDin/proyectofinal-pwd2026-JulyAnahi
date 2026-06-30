@@ -1,0 +1,100 @@
+:root {
+  --bg-principal: #121212;
+  --bg-superficie: #1e1e1e;
+  --bg-input: #2d2d2d;
+  --texto-principal: #ffffff;
+  --texto-secundario: #b3b3b3;
+  --color-primario: #bb86fc;
+  --color-primario-hover: #9a66da;
+  --color-peligro: #cf6679;
+  --color-exito: #03dac6;
+  --borde: #333333;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-principal);
+  color: var(--texto-principal);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.card-oscura {
+  background-color: var(--bg-superficie);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: var(--bg-superficie);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--borde);
+}
+
+th {
+  background-color: #252525;
+  color: var(--color-primario);
+  font-weight: 600;
+}
+
+tr:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+input, select {
+  background-color: var(--bg-input);
+  color: var(--texto-principal);
+  border: 1px solid var(--borde);
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+input:focus, select:focus {
+  outline: 2px solid var(--color-primario);
+}
+
+.btn-primario {
+  background-color: var(--color-primario);
+  color: #000000;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-primario:hover { background-color: var(--color-primario-hover); }
+
+.btn-danger {
+  background-color: transparent;
+  color: var(--color-peligro);
+  border: 1px solid var(--color-peligro);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-danger:hover { background-color: var(--color-peligro); color: #000; }
+
+.btn-edit {
+  background-color: transparent;
+  color: var(--color-primario);
+  border: 1px solid var(--color-primario);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+
+.btn-edit:hover { background-color: var(--color-primario); color: #000; }
