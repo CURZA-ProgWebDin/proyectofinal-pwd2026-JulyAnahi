@@ -1,0 +1,44 @@
+
+services:
+  # Base de Datos PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - red-interna
+
+  # Servidor Flask Backend
+  backend:
+    build: ./backend
+    container_name: flask_backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      # IMPORTANTE: En lugar de 'localhost', usas 'db' (el nombre del servicio de arriba)
+      DATABASE_URL: ${POSTGRES_URL}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      FLASK_ENV: ${FLASK_ENV}
+      SECRET_KEY: ${SECRET_KEY}
+      BASE_URL_APP: ${BASE_URL_APP}
+    # 'depends_on' asegura que Flask espere a que la base de datos encienda primero
+    depends_on:
+      - db
+    networks:
+      - red-interna
+
+volumes:
+  postgres_data:
+
+networks:
+  red-interna:
+    driver: bridge
